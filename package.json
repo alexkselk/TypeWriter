@@ -1,0 +1,72 @@
+{
+  "name": "typewriter",
+  "displayName": "TypeWriter",
+  "description": "A distraction-free writing editor for VS Code",
+  "version": "0.1.0",
+  "publisher": "local-dev",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "typewriter.type",
+        "title": "TypeWriter: Type"
+      },
+      {
+        "command": "typewriter.openStandardEditor",
+        "title": "TypeWriter: Open in Standard Editor"
+      },
+      {
+        "command": "typewriter.toggle",
+        "title": "TypeWriter: Toggle"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "typewriter.type",
+        "key": "ctrl+alt+t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "typewriter.toggle",
+        "key": "ctrl+shift+t",
+        "when": "editorTextFocus || activeCustomEditorId == typewriter.editor"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "typewriter.editor",
+        "displayName": "TypeWriter",
+        "selector": [
+          {
+            "filenamePattern": "*.txt"
+          },
+          {
+            "filenamePattern": "*.md"
+          }
+        ],
+        "priority": "option"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "node esbuild.js",
+    "watch": "node esbuild.js --watch"
+  },
+  "dependencies": {
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.44.0",
+    "codemirror": "^6.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "@types/vscode": "^1.100.0",
+    "esbuild": "^0.27.0",
+    "typescript": "^5.9.0"
+  }
+}

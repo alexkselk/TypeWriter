@@ -1,0 +1,99 @@
+
+:root {
+    --tw-background: #ffffff;
+    --tw-foreground: #222222;
+
+    --tw-font-family: Consolas, "Courier New", monospace;
+    --tw-font-size: 24px;
+    --tw-line-height: 1.5;
+
+    --tw-content-padding-inline: 40px;
+    --tw-scroll-space: 50vh;
+
+    --tw-gutter-color: #999999;
+    --tw-active-line-border: #cccccc;
+    --tw-selection-background: #b3d4fc;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+
+    background: var(--tw-background);
+    color: var(--tw-foreground);
+}
+
+#editor {
+    width: 100%;
+    height: 100vh;
+}
+
+.cm-editor {
+    width: 100%;
+    height: 100vh;
+
+    font-family: var(--tw-font-family);
+    font-size: var(--tw-font-size);
+    line-height: var(--tw-line-height);
+
+    color: var(--tw-foreground);
+    background: var(--tw-background);
+}
+
+.cm-scroller {
+    overflow: auto;
+
+    padding-block: var(--tw-scroll-space);
+
+    background: var(--tw-background);
+
+    /* Scrolling is controlled by ScrollController. */
+    scroll-behavior: auto;
+}
+
+.cm-content {
+    padding-inline: var(--tw-content-padding-inline);
+    background: var(--tw-background);
+}
+
+.cm-gutters {
+    background: var(--tw-background);
+    border: none;
+}
+
+.cm-lineNumbers .cm-gutterElement {
+    font-size: 0.75em;
+    color: var(--tw-gutter-color);
+
+    padding: 0 8px 0 4px;
+
+    display: flex;
+    align-items: flex-end;
+
+    line-height: 1;
+}
+
+.cm-activeLine {
+    background-color: var(--tw-background) !important;
+    border-bottom: 1px solid var(--tw-active-line-border);
+}
+
+.cm-activeLineGutter {
+    background-color: var(--tw-background) !important;
+}
+
+.cm-selectionBackground,
+.cm-focused .cm-selectionBackground {
+    background-color: var(--tw-selection-background) !important;
+}
+
+.cm-focused {
+    outline: none;
+}

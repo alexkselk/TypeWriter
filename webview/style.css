@@ -10,9 +10,10 @@
     --tw-content-padding-inline: 40px;
     --tw-scroll-space: 50vh;
 
-    --tw-gutter-color: #999999;
+    --tw-gutter-color: lightgray;
     --tw-active-line-border: #cccccc;
-    --tw-selection-background: #b3d4fc;
+
+    --tw-selection-background: #ffb6d9;
 }
 
 * {
@@ -35,6 +36,8 @@ body {
     height: 100vh;
 }
 
+/* Editor */
+
 .cm-editor {
     width: 100%;
     height: 100vh;
@@ -49,51 +52,50 @@ body {
 
 .cm-scroller {
     overflow: auto;
-
     padding-block: var(--tw-scroll-space);
 
     background: var(--tw-background);
-
-    /* Scrolling is controlled by ScrollController. */
     scroll-behavior: auto;
 }
 
 .cm-content {
     padding-inline: var(--tw-content-padding-inline);
-    background: var(--tw-background);
 }
 
-.cm-gutters {
-    background: var(--tw-background);
-    border: none;
-}
-
-.cm-lineNumbers .cm-gutterElement {
-    font-size: 0.75em;
-    color: var(--tw-gutter-color);
-
-    padding: 0 8px 0 4px;
-
-    display: flex;
-    align-items: flex-end;
-
-    line-height: 1;
-}
+/* Active line */
 
 .cm-activeLine {
-    background-color: var(--tw-background) !important;
-    border-bottom: 1px solid var(--tw-active-line-border);
+    background: transparent !important;
 }
 
-.cm-activeLineGutter {
-    background-color: var(--tw-background) !important;
+/* Gutter */
+
+.cm-gutters {
+    background: #ffffff !important;
+    border: none !important;
 }
 
-.cm-selectionBackground,
-.cm-focused .cm-selectionBackground {
-    background-color: var(--tw-selection-background) !important;
+.cm-gutterElement {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+
+    color: var(--tw-gutter-color) !important;
+    background: #ffffff !important;
 }
 
-.cm-focused {
-    outline: none;
+/* Line numbers and em dash: subscript */
+
+.cm-lineNumbers .cm-gutterElement {
+    /* font-size: 0.5em; */
+    line-height: 1;
+    /* vertical-align: sub; */
+}
+
+/* Current line marker */
+
+.cm-lineNumbers .cm-activeLineGutter {
+    /* font-size: 1em; */
+    vertical-align: baseline;
+    color: lightgray !important;
 }

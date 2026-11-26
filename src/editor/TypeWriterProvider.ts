@@ -10,7 +10,7 @@ export class TypeWriterEditorProvider
 
     constructor(
         private readonly context: vscode.ExtensionContext
-    ) {}
+    ) { }
 
     public async resolveCustomTextEditor(
         document: vscode.TextDocument,
@@ -56,12 +56,38 @@ export class TypeWriterEditorProvider
             async message => {
                 if (message.type === "ready") {
                     documentSync.sendInitialDocument();
+                    return;
                 }
 
                 if (message.type === "edit") {
-                    await documentSync.applyFromWebview(
-                        message.changes
-                    );
+                    if (
+                        Array.isArray(message.changes) &&
+                        Number.isInteger(message.sequence)
+                    ) {
+                        await documentSync.applyFromWebview(
+                            message.changes,
+                            message.sequence
+                        );
+                    }
+
+                    return;
+                }
+
+                if (message.type === "selection") {
+                    if (
+                        Number.isInteger(message.anchor) &&
+                        Number.isInteger(message.head)
+                    ) {
+                        cursorSync.applyFromWebview(
+                            message.anchor,
+                            message.head
+                        );
+                    }
+                }
+
+                if (message.type === "resync") {
+                    documentSync.sendInitialDocument();
+                    return;
                 }
             }
         );

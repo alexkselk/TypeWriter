@@ -5,7 +5,6 @@ import {
     lineNumbers,
     highlightActiveLineGutter
 } from "@codemirror/view";
-// import { basicSetup } from "codemirror";
 import { minimalSetup } from "codemirror";
 
 import { ScrollController } from "./scrollController";
@@ -76,12 +75,15 @@ view = new EditorView({
         extensions: [
             minimalSetup,
 
+            EditorView.lineWrapping,
+
             lineNumbers({
                 formatNumber: (lineNo, state) => {
                     const currentLine =
                         state.doc.lineAt(state.selection.main.head).number;
-                    var r = "     ";
-                    
+
+                    let r = "     ";
+
                     if (lineNo === 1 || lineNo === state.doc.lines) {
                         r = "-----";
                     }
@@ -158,11 +160,106 @@ view = new EditorView({
     parent: editorElement
 });
 
+
+// --------------------------------------------------
+// Responsive scaling
+// --------------------------------------------------
+
+const BASE_FONT_SIZE = 24;
+const BASE_PADDING = 40;
+const TARGET_CHARACTERS = 60;
+
+let currentScale = 1;
+
+const measureElement = document.createElement("span");
+
+measureElement.textContent = "0000000000";
+
+Object.assign(measureElement.style, {
+    position: "absolute",
+    visibility: "hidden",
+    whiteSpace: "pre",
+    fontFamily: getComputedStyle(view.dom).fontFamily,
+    fontSize: `${BASE_FONT_SIZE}px`,
+    fontWeight: "normal",
+    letterSpacing: "normal"
+});
+
+document.body.appendChild(measureElement);
+
+const baseCharWidth =
+    measureElement.getBoundingClientRect().width / 10;
+
+measureElement.remove();
+
+function updateEditorScale(): void {
+    const gutters = view.dom.querySelector(".cm-gutters");
+
+    if (!gutters) {
+        return;
+    }
+
+    const availableWidth = editorElement.clientWidth;
+
+    if (availableWidth <= 0) {
+        return;
+    }
+
+    // Gutter width at the current scale.
+    const currentGutterWidth =
+        gutters.getBoundingClientRect().width;
+
+    // Convert gutter width back to its base size.
+    const baseGutterWidth =
+        currentGutterWidth / currentScale;
+
+    // Total width required for 60 characters.
+    const requiredWidth =
+        TARGET_CHARACTERS * baseCharWidth +
+        BASE_PADDING * 2 +
+        baseGutterWidth;
+
+    const newScale = Math.min(
+        1,
+        availableWidth / requiredWidth
+    );
+
+    if (Math.abs(newScale - currentScale) < 0.001) {
+        return;
+    }
+
+    currentScale = newScale;
+
+    document.documentElement.style.setProperty(
+        "--tw-scale",
+        String(newScale)
+    );
+
+    requestAnimationFrame(() => {
+        scrollController.center(view);
+    });
+}
+
+const resizeObserver = new ResizeObserver(() => {
+    updateEditorScale();
+});
+
+resizeObserver.observe(editorElement);
+
+// Initial measurement after CodeMirror has rendered.
+requestAnimationFrame(() => {
+    updateEditorScale();
+});
+
+
+// --------------------------------------------------
+// Messages from extension
+// --------------------------------------------------
+
 window.addEventListener("message", event => {
     const message = event.data;
 
     if (message.type === "document") {
-        // A full document snapshot invalidates queued local edits.
         pendingEdits.length = 0;
         inFlightSequence = null;
 
@@ -199,8 +296,6 @@ window.addEventListener("message", event => {
     }
 
     if (message.type === "externalChanges") {
-        // External offsets refer to the document state in VS Code.
-        // If local edits are still pending, request a clean snapshot.
         if (
             inFlightSequence !== null ||
             pendingEdits.length > 0
@@ -254,11 +349,13 @@ window.addEventListener("message", event => {
     }
 });
 
-window.addEventListener("resize", () => {
-    scrollController.center(view);
-});
+
+// --------------------------------------------------
+// Cleanup
+// --------------------------------------------------
 
 window.addEventListener("beforeunload", () => {
+    resizeObserver.disconnect();
     scrollController.destroy();
 });
 

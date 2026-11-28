@@ -2,7 +2,7 @@
   "name": "typewriter",
   "displayName": "TypeWriter",
   "description": "A distraction-free writing editor for VS Code",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "publisher": "local-dev",
   "engines": {
     "vscode": "^1.100.0"
@@ -24,6 +24,10 @@
       {
         "command": "typewriter.toggle",
         "title": "TypeWriter: Toggle"
+      },
+      {
+        "command": "typewriter.megaZen",
+        "title": "TypeWriter: Open in Mega Zen"
       }
     ],
     "keybindings": [
@@ -36,6 +40,16 @@
         "command": "typewriter.toggle",
         "key": "ctrl+shift+t",
         "when": "editorTextFocus || activeCustomEditorId == typewriter.editor"
+      },
+      {
+        "command": "workbench.action.toggleZenMode",
+        "key": "f11",
+        "when": "activeCustomEditorId == typewriter.editor"
+      },
+      {
+        "command": "typewriter.megaZen",
+        "key": "shift+f11",
+        "when": "activeCustomEditorId == typewriter.editor"
       }
     ],
     "customEditors": [
@@ -68,5 +82,8 @@
     "@types/vscode": "^1.100.0",
     "esbuild": "^0.27.0",
     "typescript": "^5.9.0"
-  }
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ]
 }
